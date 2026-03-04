@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Client Store</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AS3Ztate2M5P29z3ThUrn23DiHFdfMeczqPYH0Bit3V-KKgv_gh2J7RT5JkBxdbKhhNkMyUwL0nc2V-E&currency=USD"></script>
+
+</head>
+
+<body>
+
+<header>
+CLIENT STORE
+</header>
+
+<div class="container">
+
+<div class="product">
+
+<h2>Essence Client</h2>
+
+<p>$2</p>
+
+<button onclick="buy('essence')">
+Pay with Card / Apple Pay / Google Pay
+</button>
+
+<div id="paypal-essence"></div>
+
+</div>
+
+
+<div class="product">
+
+<h2>Nursultan Client</h2>
+
+<p>$2</p>
+
+<button onclick="buy('nursultan')">
+Pay with Card / Apple Pay / Google Pay
+</button>
+
+<div id="paypal-nursultan"></div>
+
+</div>
+
+
+<div class="product">
+
+<h2>Rockstar 2.0</h2>
+
+<p>$2</p>
+
+<button onclick="buy('rockstar')">
+Pay with Card / Apple Pay / Google Pay
+</button>
+
+<div id="paypal-rockstar"></div>
+
+</div>
+
+</div>
+
+
+<footer>
+<a href="policy.html">Store Policy</a>
+</footer>
+
+<script>
+
+const stripe = Stripe("pk_test_51T7GJKKfRM5287PSC6JQnLHyLK9VdWkgvfaOZrWD0iSLcqVxxVHCMh6j1uh53HRYE9tYCRbZjzn0EIxlfkVeOGBO00zKExXgcK")
+
+function buy(product){
+
+fetch("/create-checkout-session",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({product})
+
+})
+.then(res=>res.json())
+.then(data=>{
+
+stripe.redirectToCheckout({
+sessionId:data.id
+})
+
+})
+
+}
+
+function paypalButton(product,id){
+
+paypal.Buttons({
+
+createOrder:function(data,actions){
+
+return actions.order.create({
+
+purchase_units:[{
+amount:{value:"2.00"}
+}]
+
+})
+
+},
+
+onApprove:function(data,actions){
+
+return actions.order.capture().then(function(){
+
+window.location="success.html?product="+product
+
+})
+
+}
+
+}).render(id)
+
+}
+
+paypalButton("essence","#paypal-essence")
+paypalButton("nursultan","#paypal-nursultan")
+paypalButton("rockstar","#paypal-rockstar")
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:black;color:white;text-align:center;margin-top:100px">
+
+<h1>Thank you for purchase</h1>
+
+<button id="download">Download Client</button>
+
+<script>
+
+const params = new URLSearchParams(window.location.search)
+
+const product = params.get("product")
+
+document.getElementById("download").onclick=function(){
+
+window.location="files/"+product+".zip"
+
+}
+
+</script>
+
+</body>
+</html>
